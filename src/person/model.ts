@@ -14,11 +14,16 @@ export const getPersons = () => {
   });
 };
 
-export const addPersons = (personName: string) => {
+export const addPersons = (
+  personName: string,
+  personBirthday: Date,
+  personEmail: string,
+  personPhone: string
+) => {
   return new Promise((resolve, reject) => {
     const query = {
-      text: "SELECT * FROM sp_person_add($1)",
-      values: [personName],
+      text: "SELECT * FROM sp_person_add($1,$2,$3,$4)",
+      values: [personName, personBirthday, personEmail, personPhone],
     };
     pool.query(query, (error, result) => {
       if (error) {
@@ -30,11 +35,17 @@ export const addPersons = (personName: string) => {
   });
 };
 
-export const updatePerson = (personName: string, personId: number) => {
+export const updatePerson = (
+  personId: string,
+  personName: string,
+  personBirthday: Date,
+  personEmail: string,
+  personPhone: string
+) => {
   return new Promise((resolve, reject) => {
     const query = {
-      text: "SELECT * FROM sp_person_update($1,$2)",
-      values: [personName, personId],
+      text: "SELECT * FROM sp_person_update($1,$2,$3,$4,$5)",
+      values: [personId, personName, personBirthday, personEmail, personPhone],
     };
     pool.query(query, (error, result) => {
       if (error) {

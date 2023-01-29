@@ -15,13 +15,18 @@ export const getPersons = async (req: Request, res: Response) => {
 };
 
 export const addPersons = async (req: Request, res: Response) => {
-  let { personName } = req.body;
+  let { personName, personBirthday, personEmail, personPhone } = req.body;
   if (!personName) {
     res.status(401).send({ error: "Please provide a person" });
     return;
   }
   try {
-    const result: any = await model.addPersons(personName);
+    const result: any = await model.addPersons(
+      personName,
+      personBirthday,
+      personEmail,
+      personPhone
+    );
     if (result.rows && result.rows[0]) {
       res.status(201).json({ person: result.rows[0] });
     } else {
@@ -34,13 +39,13 @@ export const addPersons = async (req: Request, res: Response) => {
 
 export const updatePerson = async (req: Request, res: Response) => {
   let { personId } = req.params;
-  let { personName } = req.body;
+  let { personName, personBirthday, personEmail, personPhone } = req.body;
   if (!personId || !personName) {
     res.status(401).send({ error: "Please provide valid request." });
     return;
   }
   try {
-    const result: any = await model.updatePerson(personId, personName);
+    const result: any = await model.updatePerson(personId, personName, personBirthday, personEmail, personPhone);
     if (result.rows && result.rows[0]) {
       res.status(200).json({ person: result.rows[0] });
     } else {
