@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 //----------------------------------------------------------------------------------------------------------
 //routes of the app (importation of endpoints)
 import personRoutes from "./person/route";
+import productRoutes from "./product/route";
 //----------------------------------------------------------------------------------------------------------
 //server
 dotenv.config();
@@ -20,8 +21,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 //----------------------------------------------------------------------------------------------------------
+//cors (connecting with Front End)
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  })
+);
+//----------------------------------------------------------------------------------------------------------
 //routes of the app (endpoints)
 app.use("/", personRoutes);
+app.use("/", productRoutes);
 //----------------------------------------------------------------------------------------------------------
 //server
 app.use((req: Request, res: Response, next: NextFunction) => {
