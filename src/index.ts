@@ -6,6 +6,7 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 //----------------------------------------------------------------------------------------------------------
 //routes of the app (importation of endpoints)
+import authRoutes from './auth/route';
 import personRoutes from "./person/route";
 import productRoutes from "./product/route";
 //----------------------------------------------------------------------------------------------------------
@@ -30,6 +31,7 @@ app.use(
 );
 //----------------------------------------------------------------------------------------------------------
 //routes of the app (endpoints)
+app.use('/', authRoutes);
 app.use("/", personRoutes);
 app.use("/", productRoutes);
 //----------------------------------------------------------------------------------------------------------
