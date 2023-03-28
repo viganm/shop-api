@@ -15,17 +15,15 @@ export const getPersons = async (req: Request, res: Response) => {
 };
 
 export const addPersons = async (req: Request, res: Response) => {
-  let { personName, personBirthday, personEmail, personPhone } = req.body;
-  if (!personName) {
+  let { personEmail, password } = req.body;
+  if (!personEmail || !password) {
     res.status(401).send({ error: "Please provide a person" });
     return;
   }
   try {
     const result: any = await model.addPersons(
-      personName,
-      personBirthday,
       personEmail,
-      personPhone
+      password
     );
     if (result.rows && result.rows[0]) {
       res.status(201).json({ person: result.rows[0] });

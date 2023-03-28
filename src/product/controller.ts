@@ -5,7 +5,7 @@ export const getProducts = async (req: Request, res: Response) => {
   try {
     const result: any = await model.getProducts();
     if (result.rows) {
-      res.status(200).json({ persons: result.rows });
+      res.status(200).json({ products: result.rows });
     } else {
       res.status(401).json({ error: "Error." });
     }

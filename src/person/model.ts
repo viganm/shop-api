@@ -15,15 +15,13 @@ export const getPersons = () => {
 };
 
 export const addPersons = (
-  personName: string,
-  personBirthday: Date,
   personEmail: string,
-  personPhone: string
+  password: string
 ) => {
   return new Promise((resolve, reject) => {
     const query = {
-      text: "SELECT * FROM sp_person_add($1,$2,$3,$4)",
-      values: [personName, personBirthday, personEmail, personPhone],
+      text: "SELECT * FROM sp_person_add($1,$2)",
+      values: [ personEmail, password ],
     };
     pool.query(query, (error, result) => {
       if (error) {
