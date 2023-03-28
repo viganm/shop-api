@@ -1,22 +1,28 @@
 import { Request, Response } from 'express';
+import { hashPasswordWithBcrypt } from '../utils/encryption';
 import * as model from './model';
 import * as jwt from 'jsonwebtoken';
 import axios from 'axios';
 
 export const login = async (req: Request, res: Response) => {
-  let { username, password } = req.body;
-  if (!username || !password) {
-    res.status(401).send({ error: 'Please provide a username and password' });
+  let { userEmail, password } = req.body;
+  if (!userEmail || !password) {
+    res.status(401).send({ error: 'Please provide a email and password' });
     return;
   }
   try {
-    const result: any = await model.getUser(username, password);
+    const hash: string | null = await hashPasswordWithBcrypt(password, 10);
+    if (!hash) {
+      res.status(400).json({ error: 'Error hashing password.' });
+      return;
+    }
+    const result: any = await model.getUser(userEmail, hash);
     if (result.rows && result.rows[0]) {
       const user = result.rows[0];
       const token = jwt.sign(
         {
           userId: user.user_id,
-          username: user.username,
+          userEmail: user.userEmail,
         },
         process.env.JWT_KEY || '',
         { expiresIn: 60 * 60 * 24 }

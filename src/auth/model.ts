@@ -1,15 +1,11 @@
 import { pool } from '../db/db';
 
-export const getUser = (username: string, password: string) => {
+export const getUser = (personEmail: string, password: string) => {
   return new Promise((resolve, reject) => {
     const query = {
-      text: `SELECT * FROM users
-        LEFT JOIN user_role 
-        ON users.user_id = user_role.user_id
-        LEFT JOIN role
-        ON user_role.role_id = role.role_id
-        WHERE users.username = $1 AND users.userpassword = $2`,
-      values: [username, password],
+      text: `SELECT * FROM person
+        WHERE person.personEmail = $1 AND users.userpassword = $2`,
+      values: [personEmail, password],
     };
     pool.query(query, (error, result) => {
       if (error) {
@@ -21,7 +17,7 @@ export const getUser = (username: string, password: string) => {
   });
 };
 
-export const getUserWithLocationInfo = (username: string, password: string) => {
+export const getUserWithLocationInfo = (personEmail: string, password: string) => {
   return new Promise((resolve, reject) => {
     const query = {
       text: `SELECT * FROM users
@@ -35,8 +31,8 @@ export const getUserWithLocationInfo = (username: string, password: string) => {
         ON person.person_id = person_location.person_id
         LEFT JOIN location
         ON person_location.location_id = location.location_id
-        WHERE lower(users.username) = lower($1) AND users.userpassword = $2`,
-      values: [username, password],
+        WHERE lower(person.personEmail) = lower($1) AND person.password = $2`,
+      values: [personEmail, password],
     };
     pool.query(query, (error, result) => {
       if (error) {
