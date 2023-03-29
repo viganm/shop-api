@@ -6,7 +6,7 @@ export const getPerson = (personEmail: string) => {
   return new Promise((resolve, reject) => {
     const query = {
       text: `SELECT * FROM person
-        WHERE person.personEmail = $1`,
+        WHERE person.person_email = $1`,
       values: [personEmail],
     };
     pool.query(query, (error, result) => {
