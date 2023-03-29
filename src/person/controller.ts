@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { hashPasswordWithBcrypt } from '../utils/encryption';
 import * as model from "./model";
 
 export const getPersons = async (req: Request, res: Response) => {
@@ -16,22 +17,21 @@ export const getPersons = async (req: Request, res: Response) => {
 
 export const addPersons = async (req: Request, res: Response) => {
   let { personEmail, password } = req.body;
-  if (!personEmail || !password) {
-    res.status(401).send({ error: "Please provide a person" });
-    return;
-  }
   try {
-    const result: any = await model.addPersons(
-      personEmail,
-      password
-    );
-    if (result.rows && result.rows[0]) {
-      res.status(201).json({ person: result.rows[0] });
-    } else {
-      res.status(401).json({ error: "Error." });
+    const hash: string | null = await hashPasswordWithBcrypt(password, 10);
+    if (!hash) {
+      res.status(400).json({ error: 'Error hashing password.' });
+      return;
     }
-  } catch (_) {
-    res.status(500).json({ error: "Something went wrong. Please try again." });
+    const result: any = await model.addPersons(personEmail, hash);
+    if (result.rows && result.rows[0]) {
+      res.status(201).json({ user: result.rows[0] });
+    } else {
+      res.status(401).json({ error: 'Error.' });
+    }
+  } catch (err: any) {
+    console.log(err);
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
   }
 };
 
