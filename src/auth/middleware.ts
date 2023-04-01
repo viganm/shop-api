@@ -6,16 +6,20 @@ export const authorization = (
   res: Response,
   next: NextFunction
 ) => {
-  const token = <string>req.cookies ? req.cookies.token : null;
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1];
   if (!token) {
-    res.status(403).json({ error: "Unauthorized." });
-    return;
+    return res.status(401).json({ error: "Unauthorized." });
   }
-  try {
-    const data = <any>jwt.verify(token, process.env.JWT_SECRET || "");
-    next();
-  } catch (_) {
-    res.status(403).json({ error: "Unauthorized." });
-    return;
-  }
+
+  jwt.verify(
+    token,
+    process.env.JWT_SECRET || "default_secret",
+    (err, decoded) => {
+      if (err) {
+        return res.status(403).json({ error: "Forbidden." });
+      }
+      next();
+    }
+  );
 };
