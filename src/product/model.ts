@@ -1,4 +1,5 @@
 import { pool } from "../db/db";
+import fs from "fs";
 
 export const getProducts = () => {
   return new Promise((resolve, reject) => {
@@ -15,19 +16,20 @@ export const getProducts = () => {
 };
 
 export const addProducts = (
-  personName: string,
-  personBirthday: Date,
-  personEmail: string,
-  personPhone: string
+  productName: string,
+  productPrice: number,
+  productCategoryId: number,
+  productImage: Uint8Array
 ) => {
   return new Promise((resolve, reject) => {
     const query = {
-      text: "SELECT * FROM sp_product_add($1,$2,$3,$4)",
-      values: [personName, personBirthday, personEmail, personPhone],
+      text: "SELECT * FROM sp_product_add($1, $2, $3, $4)",
+      values: [productName, productPrice, productCategoryId, productImage],
     };
-    pool.query(query, (error, result) => {
-      if (error) {
-        reject(error);
+
+    pool.query(query, (err, result) => {
+      if (err) {
+        reject(err);
       } else {
         resolve(result);
       }
