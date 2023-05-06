@@ -15,17 +15,17 @@ export const getProducts = async (req: Request, res: Response) => {
 };
 
 export const addProducts = async (req: Request, res: Response) => {
-  let { personName, personBirthday, personEmail, personPhone } = req.body;
-  if (!personName) {
-    res.status(401).send({ error: "Please provide a person" });
+  let { productName, productPrice, productCategoryId, productImage } = req.body;
+  if (!productName) {
+    res.status(401).send({ error: "Please provide a name" });
     return;
   }
   try {
     const result: any = await model.addProducts(
-      personName,
-      personBirthday,
-      personEmail,
-      personPhone
+      productName,
+      productPrice,
+      productCategoryId,
+      productImage
     );
     if (result.rows && result.rows[0]) {
       res.status(201).json({ person: result.rows[0] });
@@ -45,7 +45,13 @@ export const updateProduct = async (req: Request, res: Response) => {
     return;
   }
   try {
-    const result: any = await model.updateProduct(personId, personName, personBirthday, personEmail, personPhone);
+    const result: any = await model.updateProduct(
+      personId,
+      personName,
+      personBirthday,
+      personEmail,
+      personPhone
+    );
     if (result.rows && result.rows[0]) {
       res.status(200).json({ person: result.rows[0] });
     } else {

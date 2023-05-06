@@ -6,7 +6,7 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 //----------------------------------------------------------------------------------------------------------
 //routes of the app (importation of endpoints)
-import authRoutes from './auth/route';
+import authRoutes from "./auth/route";
 import personRoutes from "./person/route";
 import productRoutes from "./product/route";
 //----------------------------------------------------------------------------------------------------------
@@ -18,20 +18,21 @@ const port = process.env.PORT || 8080;
 //----------------------------------------------------------------------------------------------------------
 //packages
 app.use(helmet());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
 app.use(cookieParser());
 //----------------------------------------------------------------------------------------------------------
 //cors (connecting with Front End)
 app.use(
   cors({
     origin: ["http://localhost:3000"],
-    credentials: true,
+    credentials: false,
+    optionsSuccessStatus: 200,
   })
 );
 //----------------------------------------------------------------------------------------------------------
 //routes of the app (endpoints)
-app.use('/', authRoutes);
+app.use("/", authRoutes);
 app.use("/", personRoutes);
 app.use("/", productRoutes);
 //----------------------------------------------------------------------------------------------------------
@@ -39,6 +40,9 @@ app.use("/", productRoutes);
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({ error: "API not found!" });
 });
+
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 app.listen(port, () => {
   console.log(new Date().toLocaleTimeString());
