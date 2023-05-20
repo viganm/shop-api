@@ -19,7 +19,7 @@ export const addProducts = (
   productName: string,
   productPrice: number,
   productCategoryId: number,
-  productImage: Uint8Array
+  productImage: string
 ) => {
   return new Promise((resolve, reject) => {
     const query = {

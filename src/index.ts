@@ -18,8 +18,8 @@ const port = process.env.PORT || 8080;
 //----------------------------------------------------------------------------------------------------------
 //packages
 app.use(helmet());
-app.use(bodyParser.json({ limit: "10mb" }));
-app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" }));
+app.use(bodyParser.json({ limit: "50mB" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mB" }));
 app.use(cookieParser());
 //----------------------------------------------------------------------------------------------------------
 //cors (connecting with Front End)
