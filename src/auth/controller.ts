@@ -15,8 +15,9 @@ export const login = async (req: Request, res: Response) => {
         hash
       );
       if (passwordsMatch) {
+        const personId: string = result.rows[0].person_id;
         const token: string = model.generateJwtToken(result.rows[0]);
-        res.status(200).json({ token });
+        res.status(200).json({ person_id: personId, token });
       } else {
         res.status(401).json({ error: "Incorrect password." });
       }

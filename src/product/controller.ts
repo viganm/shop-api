@@ -14,6 +14,20 @@ export const getProducts = async (req: Request, res: Response) => {
   }
 };
 
+export const getProductsByIds = async (req: Request, res: Response) => {
+  let { productIds } = req.body;
+  try {
+    const result: any = await model.getProductsByIds(productIds);
+    if (result.rows) {
+      res.status(200).json({ products: result.rows });
+    } else {
+      res.status(401).json({ error: "Error." });
+    }
+  } catch (_) {
+    res.status(500).json({ error: "Something went wrong. Please try again." });
+  }
+};
+
 export const addProducts = async (req: Request, res: Response) => {
   let { productName, productPrice, productCategoryId, productImage } = req.body;
   if (!productName) {

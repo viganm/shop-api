@@ -15,6 +15,23 @@ export const getProducts = () => {
   });
 };
 
+export const getProductsByIds = (productIds: number[]) => {
+  return new Promise((resolve, reject) => {
+    const query = {
+      text: "SELECT * FROM sp_product_get_by_id($1)",
+      values: [productIds],
+    };
+
+    pool.query(query, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+};
+
 export const addProducts = (
   productName: string,
   productPrice: number,

@@ -5,6 +5,7 @@ import { authorization } from "../auth/middleware";
 const router = Router();
 
 router.get("/products", productController.getProducts);
+router.get("/products-by-id", productController.getProductsByIds);
 router.post("/product", authorization, productController.addProducts);
 router.put(
   "/product/:productId",

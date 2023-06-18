@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./auth/route";
 import personRoutes from "./person/route";
 import productRoutes from "./product/route";
+import orderRoutes from "./order/route";
 //----------------------------------------------------------------------------------------------------------
 //server
 dotenv.config();
@@ -35,6 +36,8 @@ app.use(
 app.use("/", authRoutes);
 app.use("/", personRoutes);
 app.use("/", productRoutes);
+app.use("/", orderRoutes);
+
 //----------------------------------------------------------------------------------------------------------
 //server
 app.use((req: Request, res: Response, next: NextFunction) => {
