@@ -15,11 +15,11 @@ export const getProducts = () => {
   });
 };
 
-export const getProductsByIds = (productIds: number[]) => {
+export const getProductsByIds = (productId: string) => {
   return new Promise((resolve, reject) => {
     const query = {
       text: "SELECT * FROM sp_product_get_by_id($1)",
-      values: [productIds],
+      values: [productId],
     };
 
     pool.query(query, (err, result) => {

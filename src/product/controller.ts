@@ -15,11 +15,11 @@ export const getProducts = async (req: Request, res: Response) => {
 };
 
 export const getProductsByIds = async (req: Request, res: Response) => {
-  let { productIds } = req.body;
+  let { productId } = req.params;
   try {
-    const result: any = await model.getProductsByIds(productIds);
+    const result: any = await model.getProductsByIds(productId);
     if (result.rows) {
-      res.status(200).json({ products: result.rows });
+      res.status(200).json({ product: result.rows });
     } else {
       res.status(401).json({ error: "Error." });
     }
