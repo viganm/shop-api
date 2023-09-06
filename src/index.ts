@@ -26,7 +26,10 @@ app.use(cookieParser());
 //cors (connecting with Front End)
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [
+      "http://localhost:3000",
+      "https://shop-frontend-4xuc.onrender.com",
+    ],
     credentials: false,
     optionsSuccessStatus: 200,
   })
