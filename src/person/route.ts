@@ -1,6 +1,6 @@
 import { Router } from "express";
 import * as personController from "./controller";
-import { authorization } from "../auth/middleware";
+import { authorization, restrict } from "../auth/middleware";
 
 const router = Router();
 
@@ -10,6 +10,7 @@ router.put("/person/:personId", authorization, personController.updatePerson);
 router.delete(
   "/person/:personId",
   authorization,
+  restrict("admin"),
   personController.deletePerson
 );
 
