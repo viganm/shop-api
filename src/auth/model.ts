@@ -37,7 +37,7 @@ export const generateJwtToken = (person: any): string => {
   const secret = process.env.JWT_SECRET || "default_secret";
 
   const options: jwt.SignOptions = {
-    expiresIn: "1d",
+    expiresIn: "2h",
   };
 
   const token: string = jwt.sign(payload, secret, options);
