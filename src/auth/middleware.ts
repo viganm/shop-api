@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 import { IGetUserAuthInfoRequest } from "../types/custom";
+import * as personModel from "../person/model";
 
 export const authorization = (
   req: IGetUserAuthInfoRequest,
@@ -13,6 +14,9 @@ export const authorization = (
     return res.status(401).json({ error: "Unauthorized." });
   }
 
+  const user = parseJwt(token);
+  req.user = user;
+
   jwt.verify(
     token,
     process.env.JWT_SECRET || "default_secret",
@@ -20,40 +24,41 @@ export const authorization = (
       if (err) {
         return res.status(403).json({ error: "Forbidden." });
       }
-      const user = parseJwt(token);
-      if (req.user) {
-        req.user = user;
-      }
 
       next();
     }
   );
 };
 
-export const restrict = (role: any) => {
-  return (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
-    if (req.user) {
-      if (req.user.role !== role) {
-        const error = "error";
-        next(error);
+export const restrict = (role: string) => {
+  return async (
+    req: IGetUserAuthInfoRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      if (!req.user) {
+        const error = "Please login.";
+        return res.status(401).json({ error });
       }
+
+      const isAdmin: any = await personModel.checkIfAdmin(req.user.person_id);
+      if (isAdmin.rows[0].role === role) {
+        next();
+      } else {
+        const error = "Permission denied. You are not an admin.";
+        return res.status(403).json({ error });
+      }
+    } catch (error: any) {
+      next(error);
     }
-    next();
   };
 };
 
 function parseJwt(token: string) {
   var base64Url = token.split(".")[1];
   var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  var jsonPayload = decodeURIComponent(
-    window
-      .atob(base64)
-      .split("")
-      .map(function (c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join("")
-  );
+  var jsonPayload = Buffer.from(base64, "base64").toString("utf-8");
 
   return JSON.parse(jsonPayload);
 }
