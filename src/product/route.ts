@@ -1,12 +1,17 @@
 import { Router } from "express";
 import * as productController from "./controller";
-import { authorization } from "../auth/middleware";
+import { authorization, restrict } from "../auth/middleware";
 
 const router = Router();
 
 router.get("/products", productController.getProducts);
 router.get("/products-by-id/:productId", productController.getProductsByIds);
-router.post("/product", authorization, productController.addProducts);
+router.post(
+  "/product",
+  authorization,
+  restrict("admin"),
+  productController.addProducts
+);
 router.put(
   "/product/:productId",
   authorization,
