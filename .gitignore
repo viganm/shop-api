@@ -1,4 +1,5 @@
 node_modules
 dist
+report.html.html
 
 *.env
