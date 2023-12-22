@@ -42,8 +42,8 @@ export const restrict = (role: string) => {
         return res.status(401).json({ error });
       }
 
-      const isAdmin: any = await personModel.checkIfAdmin(req.user.person_id);
-      if (isAdmin.rows[0].role === role) {
+      const userRole: any = await personModel.checkIfAdmin(req.user.person_id);
+      if (userRole.rows[0].role === role) {
         next();
       } else {
         const error = "Permission denied. You are not an admin.";

@@ -15,11 +15,13 @@ router.post(
 router.put(
   "/product/:productId",
   authorization,
+  restrict("admin"),
   productController.updateProduct
 );
 router.delete(
   "/product/:productId",
   authorization,
+  restrict("admin"),
   productController.deleteProduct
 );
 
