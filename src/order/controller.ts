@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
 import * as model from "./model";
+import { authorization, parseJwt } from "../auth/middleware";
 
 export const addOrder = async (req: Request, res: Response) => {
-  let { personId, address, postalCode, city, country, productIds } = req.body;
+  let jwtToken = parseJwt(String(req.header("Authorization")));
+  const personId = jwtToken.person_id;
+  let { address, postalCode, city, country, productIds } = req.body;
   if (!personId) {
     res.status(401).send({ error: "Please Login" });
     return;

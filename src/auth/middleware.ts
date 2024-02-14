@@ -55,10 +55,10 @@ export const restrict = (role: string) => {
   };
 };
 
-function parseJwt(token: string) {
+export const parseJwt = (token: string) => {
   var base64Url = token.split(".")[1];
   var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
   var jsonPayload = Buffer.from(base64, "base64").toString("utf-8");
 
   return JSON.parse(jsonPayload);
-}
+};

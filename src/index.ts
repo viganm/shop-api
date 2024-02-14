@@ -4,6 +4,9 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import { pool } from "./db/db";
+import createSubscriber from "pg-listen";
+import { sendEmail } from "./email_gateway/send_email";
 //----------------------------------------------------------------------------------------------------------
 //routes of the app (importation of endpoints)
 import authRoutes from "./auth/route";
@@ -54,3 +57,27 @@ app.listen(port, () => {
   console.log(new Date().toLocaleTimeString());
   console.log(`listening on port http://localhost:${port}`);
 });
+
+const channel = "notifications";
+const subscriber = createSubscriber({
+  connectionString: process.env.DATABASE_URL,
+});
+subscriber.notifications.on(channel, (payload) => {
+  console.log("Received notification in " + channel, payload);
+  sendEmail(payload);
+});
+
+subscriber.events.on("error", (error) => {
+  console.error("Fatal database connection error:", error);
+  process.exit(1);
+});
+
+process.on("exit", () => {
+  subscriber.close();
+});
+const startListenAndNotify = async () => {
+  await subscriber.connect();
+  await subscriber.listenTo(channel);
+};
+
+startListenAndNotify();
